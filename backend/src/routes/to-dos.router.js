@@ -61,12 +61,13 @@ TodosRouter.patch(
         return response.status(404).send({ message: "To Do Not Found" });
       }
 
-      const { title, description, isDone: is_done } = request.body;
+      const { title, description, is_done } = request.body;
+      console.log(request.body)
 
       await db.run("UPDATE todos SET title = ?, description = ?, is_done = ? WHERE id = ?",
         title || todoExists.title,
         description || todoExists.description,
-        is_done !== undefined ? is_done : todoExists.todoExists,
+        is_done !== undefined ? is_done : todoExists['is_done'],
         id
       );
 
@@ -105,6 +106,31 @@ TodosRouter.delete(
     } catch (error) {
       response.status(500).send({
         message: "Something went wrong trying to delete a todo",
+        error,
+      });
+    }
+  }
+);
+
+TodosRouter.get("/to-do/:id",
+  validatorID,
+  async function (request, response) {
+    try {
+      const { id } = request.params;
+      const db = await getDBConnection();
+
+      const todo = await db.get("SELECT * FROM todos WHERE id = ?", id);
+
+      if (!todo) {
+        return response.status(404).send({ message: "To Do Not Found" });
+      }
+
+      await db.close();
+
+      response.send({ todo });
+    } catch (error) {
+      response.status(500).send({
+        message: "Something went wrong trying to get a todo",
         error,
       });
     }
