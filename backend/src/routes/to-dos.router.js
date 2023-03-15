@@ -34,7 +34,7 @@ TodosRouter.get("/to-dos", async function (request, response) {
   try {
     const db = await getDBConnection();
 
-    const todos = await db.all("SELECT * FROM todos");
+    const todos = await db.all("SELECT * FROM todos ORDER BY is_done ASC");
 
     await db.close();
 
