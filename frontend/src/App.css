@@ -172,4 +172,17 @@ h1 {
 
 .description {
   display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.text-description {
+  width: 60%;
+  text-align: left;
+}
+.dates {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  grid-template-columns: 1fr;
+  margin-top: auto;
+  font-size: small;
 }
