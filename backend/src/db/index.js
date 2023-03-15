@@ -30,7 +30,9 @@ export async function initDB() {
         id INTEGER PRIMARY KEY,
         title TEXT,
         description TEXT,
-        is_done INTEGER DEFAULT 0
+        is_done INTEGER DEFAULT 0,
+        date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        date_edit TIMESTAMP DEFAULT NULL
       )
     `);
 
