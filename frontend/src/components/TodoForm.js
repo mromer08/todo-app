@@ -9,17 +9,6 @@ function TodoForm(props) {
     props.edit ? props.edit.description : ""
   );
 
-  const newTodo = async () => {
-    const respuesta = await fetch("http://localhost:3000/v1/to-do", {
-      method: "POST",
-      body: JSON.stringify({ title: input, description: description }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    console.log(await respuesta.json());
-  };
-
   const inputRef = useRef(null);
 
   const handleChange = (e) => {
@@ -38,14 +27,11 @@ function TodoForm(props) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // props.onSubmit({
-    //   // id: Math.floor(Math.random() * 10000),
-    //   text: input,
-    //   description,
-    //   isDone: false,
-    //   showDescription: false,
-    // });
-    newTodo();
+    props.onSubmit({
+      title: input,
+      description,
+      showDescription: false,
+    });
     setInput("");
     setDescription("");
   };

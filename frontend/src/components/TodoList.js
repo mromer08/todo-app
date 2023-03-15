@@ -5,26 +5,28 @@ import Todo from "./Todo";
 function TodoList() {
   const [todos, setTodos] = useState([]);
 
-  const llamarLista = async () => {
-    const respuesta = await fetch('http://localhost:3000/v1/to-dos');
+  const getTodos = async () => {
+    const respuesta = await fetch('http://localhost:3001/v1/to-dos');
     const resJson = await respuesta.json();
     setTodos(resJson.todos);
     console.log(todos)
   };
 
   useEffect(() => {
-    llamarLista();
+    getTodos();
   }, []);
 
-  const addTodo = (todo) => {
-    if (!todo.title || /^\s*$/.test(todo.title)) {
-      return;
-    }
-
-    const newTodos = [todo, ...todos];
-
-    setTodos(newTodos);
-    console.log(...todos);
+  const addTodo = async (todo) => {
+    console.log('estoy agregando un nuevo todo')
+    const respuesta = await fetch("http://localhost:3001/v1/to-do", {
+      method: "POST",
+      body: JSON.stringify(todo),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    getTodos();
+    console.log(await respuesta.json());
   };
 
   const showDescription = (todoId) => {
@@ -37,30 +39,41 @@ function TodoList() {
     setTodos(updatedTodos);
   };
 
-  const updateTodo = (todoId, newValue) => {
-    if (!newValue.title || /^\s*$/.test(newValue.title)) {
-      return;
-    }
-
-    setTodos((prev) =>
-      prev.map((item) => (item.id === todoId ? newValue : item))
-    );
-  };
-
-  const removeTodo = (id) => {
-    const removedArr = [...todos].filter((todo) => todo.id !== id);
-
-    setTodos(removedArr);
-  };
-
-  const completeTodo = (id) => {
-    let updatedTodos = todos.map((todo) => {
-      if (todo.id === id) {
-        todo.isDone = !todo.isDone;
-      }
-      return todo;
+  const updateTodo = async (todoId, newValue) => {
+    console.log(newValue);
+    console.log('esta fue el valor a actualizar xd ' + todoId);
+    const respuesta = await fetch(`http://localhost:3001/v1/to-do/${todoId}`, {
+      method: "PATCH",
+      body: JSON.stringify({ title: newValue.title, description: newValue.description }),
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
-    setTodos(updatedTodos);
+    getTodos();
+    console.log(await respuesta.json());
+  };
+
+  const removeTodo = async (id) => {
+    const respuesta = await fetch(`http://localhost:3001/v1/to-do/${id}`, {
+      method: "DELETE",
+    });
+    getTodos();
+    console.log(await respuesta.json());
+  };
+
+  const completeTodo = async (id) => {
+    const todo = await fetch(`http://localhost:3001/v1/to-do/${id}`);
+    const todoJson = await todo.json();
+    const isDone = todoJson.todo['is_done'] === 1 ? 0 : 1;
+    const respuesta = await fetch(`http://localhost:3001/v1/to-do/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify({ 'is_done': isDone }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    getTodos();
+    console.log(await respuesta.json());
   };
 
   return (
@@ -68,6 +81,7 @@ function TodoList() {
       <h1>What's the Plan for Today?</h1>
       <TodoForm
       onSubmit={addTodo}
+      // onSubmitChange={updateTodo}
       />
       <Todo
         todos={todos}

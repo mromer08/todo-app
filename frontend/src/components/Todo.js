@@ -34,7 +34,7 @@ const Todo = ({
   return todos.map((todo, index) => (
     // <div>
     <div
-      className={todo.isDone ? "todo-row complete" : "todo-row"}
+      className={todo['is_done'] ? "todo-row complete" : "todo-row"}
       key={index}
     >
       <div className="description">
@@ -64,6 +64,7 @@ const Todo = ({
                 id: todo.id,
                 value: todo.title,
                 description: todo.description,
+                isDone: todo.isDone
               })
             }
             className="edit-icon"
@@ -72,7 +73,7 @@ const Todo = ({
       </div>
       {todo.showDescription && (
         <div onClick={() => completeTodo(todo.id)} className="description">
-          Description: {todo.description}
+          📑 {todo.description}
         </div>
       )}
     </div>
