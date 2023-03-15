@@ -64,7 +64,7 @@ TodosRouter.patch(
       const { title, description, is_done } = request.body;
       console.log(request.body)
 
-      await db.run("UPDATE todos SET title = ?, description = ?, is_done = ? WHERE id = ?",
+      await db.run("UPDATE todos SET title = ?, description = ?, is_done = ?, date_edit = CURRENT_TIMESTAMP WHERE id = ?",
         title || todoExists.title,
         description || todoExists.description,
         is_done !== undefined ? is_done : todoExists['is_done'],
