@@ -73,12 +73,46 @@ const Todo = ({
       </div>
       {todo.showDescription && (
         <div onClick={() => completeTodo(todo.id)} className="description">
-          📑 {todo.description}
+          <div className="text-description">📑 {todo.description}</div>
+          
+          <div className="dates">
+            <div>Created: {timeConverter(todo['date_creation'])}</div>
+            <div>Modified: {todo['date_edit'] ? timeConverter(todo['date_edit']) : 'Never'}</div>
+          </div>
+
         </div>
       )}
     </div>
-    // </div>
   ));
+};
+
+const timeConverter = (date) => {
+  const utcDate = new Date(date);
+  const guatemalaOffset = -6 * 60; // offset in minutes for guatemala
+  const localDate = new Date(utcDate.getTime() + guatemalaOffset * 60 * 1000);
+  const seconds = Math.floor((new Date() - localDate) / 1000);
+  let interval = Math.floor(seconds / 31536000);
+
+  if (interval >= 1) {
+    return interval + " year" + (interval === 1 ? "" : "s") + " ago";
+  }
+  interval = Math.floor(seconds / 2592000);
+  if (interval >= 1) {
+    return interval + " month" + (interval === 1 ? "" : "s") + " ago";
+  }
+  interval = Math.floor(seconds / 86400);
+  if (interval >= 1) {
+    return interval + " day" + (interval === 1 ? "" : "s") + " ago";
+  }
+  interval = Math.floor(seconds / 3600);
+  if (interval >= 1) {
+    return interval + " hour" + (interval === 1 ? "" : "s") + " ago";
+  }
+  interval = Math.floor(seconds / 60);
+  if (interval >= 1) {
+    return interval + " minute" + (interval === 1 ? "" : "s") + " ago";
+  }
+  return "one moment ago";
 };
 
 export default Todo;
