@@ -176,7 +176,7 @@ h1 {
   justify-content: space-between;
 }
 .text-description {
-  width: 60%;
+  width: 55%;
   text-align: left;
 }
 .dates {
@@ -185,4 +185,5 @@ h1 {
   grid-template-columns: 1fr;
   margin-top: auto;
   font-size: small;
+  text-align: right;
 }
