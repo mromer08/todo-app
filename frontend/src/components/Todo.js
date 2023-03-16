@@ -86,33 +86,26 @@ const Todo = ({
   ));
 };
 
-const timeConverter = (date) => {
+function timeConverter(date) {
   const utcDate = new Date(date);
   const guatemalaOffset = -6 * 60; // offset in minutes for guatemala
-  const localDate = new Date(utcDate.getTime() + guatemalaOffset * 60 * 1000);
-  const seconds = Math.floor((new Date() - localDate) / 1000);
-  let interval = Math.floor(seconds / 31536000);
-
-  if (interval >= 1) {
-    return interval + " year" + (interval === 1 ? "" : "s") + " ago";
+  const inputDate = new Date(utcDate.getTime() + guatemalaOffset * 60 * 1000);
+  const currentDate = new Date();
+  const seconds = Math.floor((currentDate - inputDate) / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  
+  if (seconds < 60) {
+    return 'one moment ago';
+  } else if (minutes < 60) {
+    return `${minutes} minute${minutes === 1 ? '' : 's'} ago`;
+  } else if (inputDate.toDateString() === currentDate.toDateString()) {
+    return `today at ${inputDate.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`;
+  } else if (inputDate.toDateString() === new Date(currentDate.setDate(currentDate.getDate() - 1)).toDateString()) {
+    return `yesterday at ${inputDate.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`;
+  } else {
+    return `${inputDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric' })} at ${inputDate.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`;
   }
-  interval = Math.floor(seconds / 2592000);
-  if (interval >= 1) {
-    return interval + " month" + (interval === 1 ? "" : "s") + " ago";
-  }
-  interval = Math.floor(seconds / 86400);
-  if (interval >= 1) {
-    return interval + " day" + (interval === 1 ? "" : "s") + " ago";
-  }
-  interval = Math.floor(seconds / 3600);
-  if (interval >= 1) {
-    return interval + " hour" + (interval === 1 ? "" : "s") + " ago";
-  }
-  interval = Math.floor(seconds / 60);
-  if (interval >= 1) {
-    return interval + " minute" + (interval === 1 ? "" : "s") + " ago";
-  }
-  return "one moment ago";
-};
+}
 
 export default Todo;
