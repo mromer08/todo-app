@@ -93,7 +93,6 @@ function timeConverter(date) {
   const currentDate = new Date();
   const seconds = Math.floor((currentDate - inputDate) / 1000);
   const minutes = Math.floor(seconds / 60);
-  const hours = Math.floor(minutes / 60);
   
   if (seconds < 60) {
     return 'one moment ago';
